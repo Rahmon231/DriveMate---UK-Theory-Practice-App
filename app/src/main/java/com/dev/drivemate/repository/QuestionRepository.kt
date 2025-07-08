@@ -28,18 +28,23 @@ class QuestionRepository @Inject constructor(
 //        return dataOrException
 //    }
 
-    suspend fun getAllQuestions(): QuestionState{
-        return try {
-            val result = questionApi.getAllQuestions()
+    suspend fun getAllQuestions(): QuestionState<List<DrivingTheoryQuestionItem>> {
 
-            if (result.isEmpty()) {
-                QuestionState.Empty
-            } else {
-                QuestionState.Success(result)
+            return try {
+                val response = questionApi.getAllQuestions()
+                if (response.isSuccessful) {
+                    val questions = response.body()
+                    if (questions.isNullOrEmpty()) {
+                        QuestionState.Idle
+                    } else {
+                        QuestionState.Success(questions)
+                    }
+                } else {
+                    QuestionState.Failure(Exception("Error: ${response.code()} ${response.message()}"))
+                }
+            } catch (e: Exception) {
+                QuestionState.Failure(e)
             }
-        } catch (e: Exception) {
-            Log.e("QuestionRepository", "Error fetching questions: ${e.localizedMessage}")
-            QuestionState.Failure(e)
         }
-    }
+
 }

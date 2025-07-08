@@ -1,9 +1,10 @@
 package com.dev.drivemate.model
 
-sealed class QuestionState {
-    class Success(val questions: List<DrivingTheoryQuestionItem>) : QuestionState()
-    class Failure(val exception: Exception) : QuestionState()
-    object Empty : QuestionState()
-    object Loading : QuestionState()
+sealed class QuestionState<out T> {
+    data object Idle : QuestionState<Nothing>()
+    data object Loading : QuestionState<Nothing>()
+    data class Success<T>(val data: T) : QuestionState<T>()
+    data class Failure(val throwable: Throwable) : QuestionState<Nothing>()
 }
+
 

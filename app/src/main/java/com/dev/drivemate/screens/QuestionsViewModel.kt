@@ -23,11 +23,7 @@ class QuestionsViewModel @Inject constructor(private val repository: QuestionRep
 //        getAllQuestions()
 //    }
 
-    private val _questionState: MutableState<QuestionState> =
-        mutableStateOf<QuestionState>(QuestionState.Loading)
-    val questionState: MutableState<QuestionState>
-        get() = _questionState
-
+     val questionState = mutableStateOf<QuestionState<List<DrivingTheoryQuestionItem>>>(QuestionState.Loading)
 
     init {
         getAllQuestions()
@@ -35,8 +31,17 @@ class QuestionsViewModel @Inject constructor(private val repository: QuestionRep
 
     private fun getAllQuestions() {
         viewModelScope.launch {
-            _questionState.value = QuestionState.Loading
-            _questionState.value = repository.getAllQuestions()
+            questionState.value = QuestionState.Loading
+            questionState.value = repository.getAllQuestions()
         }
     }
+
+    fun getQuestionCount(): Int {
+        return when (val state = questionState.value) {
+            is QuestionState.Success -> state.data.size
+            else -> 0
+        }
+    }
+
+
 }
