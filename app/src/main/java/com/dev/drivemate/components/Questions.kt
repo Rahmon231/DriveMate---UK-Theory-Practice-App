@@ -126,10 +126,16 @@ fun QuestionDisplay(
     val correctAnswerState = remember(question) {
         mutableStateOf<Boolean?>(null)
     }
+
+    val isOptionSelected = remember(question) {
+        mutableStateOf(false)
+    }
+
     val updateAnswer: (Int) -> Unit = remember(question) {
         {
             answerState.value = it
             correctAnswerState.value = choices[it] == question.answer
+            isOptionSelected.value = true
         }
     }
     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f,10f), 0f)
@@ -206,8 +212,13 @@ fun QuestionDisplay(
                         verticalAlignment = Alignment.CenterVertically) {
                         RadioButton(selected = answerState.value == index,
                             onClick = {
-                                updateAnswer(index)
-                            }, modifier = Modifier.padding(start = 16.dp),
+                                if (!isOptionSelected.value) {
+                                    updateAnswer(index)
+                                }
+                            },
+                            modifier = Modifier.padding(start = 16.dp),
+                            enabled = !(isOptionSelected.value),
+
                             colors = RadioButtonDefaults.colors(
                                 selectedColor =
                                     if (correctAnswerState.value == true &&
