@@ -116,7 +116,6 @@ fun QuestionDisplay(
     onNextClick: (Int) -> Unit
 ){
 
-    Log.d("IMAGE URL TEST", "QuestionDisplay: ${question.image}")
     val choices = remember(question) {
         question.questions.toMutableList()
     }
@@ -160,7 +159,7 @@ fun QuestionDisplay(
                 Box(
                     modifier = Modifier
                         .padding(10.dp)
-                        .size(120.dp) // You can adjust size as needed
+                        .size(120.dp)
                         .clip(RectangleShape)
                         .align(alignment = Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
@@ -186,7 +185,6 @@ fun QuestionDisplay(
                     Row(modifier = Modifier
                         .padding(3.dp)
                         .fillMaxWidth()
-                       // .height(45.dp)
                         .border(
                             width = 4.dp,
                             brush = Brush.linearGradient(
@@ -259,7 +257,6 @@ fun QuestionDisplay(
                 }
 
             }
-
 
         }
     }
